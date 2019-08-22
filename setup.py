@@ -30,7 +30,8 @@ setup(
         'python-dateutil',
         'requests',
         'requests_futures',
-        'terminaltables'
+        'terminaltables',
+        'geopy'
     ],
     scripts=[
         'scripts/sft',

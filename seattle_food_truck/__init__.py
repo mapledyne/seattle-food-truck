@@ -1,6 +1,7 @@
 import datetime
 
 from functools import partial
+from geopy.geocoders import Nominatim
 from urllib.parse import quote_plus
 from math import radians, cos, sin, asin, sqrt
 from typing import Any, Callable, Iterable, List, Mapping, Optional, Tuple
@@ -59,12 +60,11 @@ def lat_long_from_address(address: str) -> Tuple[float]:
         The most likely latitude and longitude of `address`.
 
     """
-    URL = 'https://maps.googleapis.com/maps/api/geocode/json?'
     try:
-        response = requests.get(URL, params={'address': quote_plus(address)})
-        results, *_ = response.json().get('results')
-        location = results.get('geometry').get('location')
-        lat_long = location['lat'], location['lng']
+        geolocator = Nominatim(user_agent="seattle_food_truck")
+        location = geolocator.geocode(address)
+
+        lat_long = location.latitude, location.longitude
     except ValueError:
         raise ValueError('Lat/Long not found for address: {address}')
     return lat_long
