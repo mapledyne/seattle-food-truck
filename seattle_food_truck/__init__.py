@@ -319,6 +319,18 @@ class Client(object):
 
         return sorted(zip(distances, self.locations), key=lambda _: _[0])
 
+    def trucks_by_distance(self, address, max_distance):
+        local_trucks = []
+        for distance, location in self.locations_closest_to(address):
+            if distance > max_distance:
+                continue
+            truck_list = location.trucks_today()
+            if truck_list == []:
+                continue
+            local_trucks.append([location, truck_list])
+        return local_trucks
+            
+
     @staticmethod
     def events_at_location(location: Location) -> List[Mapping]:
         """Lists the events at a given location.
@@ -350,3 +362,11 @@ class Client(object):
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}()'
+
+if __name__ == "__main__":
+    sft = Client()
+    add = "901 5th Ave. Seattle WA"
+    max_distance = 0.25
+    truck_list = sft.trucks_by_distance(add, max_distance)
+    for truck in truck_list:
+        print(truck)
